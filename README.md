@@ -24,10 +24,16 @@ Files will need:
 Name
 Type
 Size
+Content Simulation
+Date Modified
 
 Folders will need:
 Name
 Children
+getSizeOfContents
+Date Modified
+
+
 
 
 Folders will be implemented as tree data structure
