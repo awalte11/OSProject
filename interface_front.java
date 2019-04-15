@@ -2,24 +2,24 @@ public interface interface_front {
 	
 	public void parseInput (String in);
 	
-	public String createFile (String in);
+	public void createFile (String[] in);
 	
-	public String deleteFile (String in);
+	public void deleteFile (String[] in);
 	
-	public String createFolder (String in);
+	public void createFolder (String[] in);
 	
-	public String deleteFolder (String in);
+	public void deleteFolder (String[]in);
 	
-	public String rename (String in);
+	public void rename (String[] in);
 	
-	public String move (String in);
+	public void move (String[] in);
 	
-	public String copy (String in);
+	public void copy (String[] in);
 	
-	public String changeDir(String in);
+	public void changeDir(String[] in);
 	
-	public String viewDir(String in);
+	public void viewDir(String[]in);
 	
-	public String help();
+	public void help();
 	
 }
