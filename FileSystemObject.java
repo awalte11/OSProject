@@ -1,19 +1,38 @@
+import java.time.LocalDate;
+import java.util.Iterator;
 public abstract class FileSystemObject {
     protected String name;
     protected String type;
-    protected DateTime updated;
+    protected LocalDate updated;
+    protected int size;
+    protected FileSystemObject parent;
 
-    public void add(FileSystemObject child)
+    public void add(FileSystemObject child) throws UnsupportedOperationException
     {
         throw new UnsupportedOperationException();
     }
-    public void remove(FileSystemObject child)
+    public void remove(FileSystemObject child) throws UnsupportedOperationException
     {
         throw new UnsupportedOperationException();
     }
-    public FileSystemObject getChild(int i)//gonna need more of these. possibly with lambda expression support or something
+    public FileSystemObject getChild(int i) throws UnsupportedOperationException//gonna need more of these. possibly with lambda expression support or something
     {
         throw new UnsupportedOperationException();
+    }
+    
+    public FileSystemObject getParent()
+    {
+      return parent;
+    }
+    
+    public void setParent(FileSystemObject newParent) 
+    {
+      if (parent != null)
+      {
+        parent.remove(this);
+      }
+      parent = newParent;
+      newParent.add(this);
     }
 
     public String getName()
@@ -37,18 +56,35 @@ public abstract class FileSystemObject {
     {
         return type;
     }
+    
+    
+    
 
+    
     public FileSystemObject(String name, String type)
     {
         this.name = name;
         this.type = type;
-        this.updated = new DateTime();
-
+        this.updated = LocalDate.now();
+        size = 1;
+        //NO parent-related functions can go here, as this constructor must be able to deal with the creation of the root folder
     }
+    
+    //This Iterator is for going over the whole tree, starting from the object in question.
+    //Do not use for just examining a single folder
+    //Fairly sure 
+    public abstract Iterator<FileSystemObject> createDeepIterator();
+
+    public abstract Iterator<FileSystemObject> createShallowIterator();
 
     public void refreshModified()
     {
-        updated = new DateTime();
+        updated = LocalDate.now();
+    }
+
+    public int getSize()
+    {
+        return  size;
     }
 
 
