@@ -8,6 +8,8 @@ public class FileObject extends FileSystemObject {
        
         
     }
+
+    
     public String getName()
     {
         return name +"." +type;

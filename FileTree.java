@@ -18,6 +18,8 @@ public class FileTree
         return root;
     }
 
+    
+
    
 
     public FileTree()
@@ -28,7 +30,7 @@ public class FileTree
 
     }
     
-    //function that finds a folder one step down
+    //function that finds and goes to a folder one step down
     public String toChild(String name)
     {
       Iterator<FileSystemObject> search = here.createShallowIterator();
@@ -46,6 +48,7 @@ public class FileTree
       return "Folder Not Found. \n" + getPath();
     }
     
+    //Gets current path
     public String getPath()
     {
       String pathname = "";
@@ -57,6 +60,7 @@ public class FileTree
       return pathname + "\n";
     }
     
+    //Checks if currently in root dir
     public boolean isRoot()
     {
       return root == path.getLast();

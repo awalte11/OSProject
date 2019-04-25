@@ -19,7 +19,7 @@ public class FolderObject extends FileSystemObject {
         child.parent = null;
         refreshModified();
     }
-    public FileSystemObject getChild(int i)//gonna need more of these. possibly with lambda expression support or something
+    public FileSystemObject getChild(int i)//get child by number in list. probably not needed with iterator but might be hand
     {
         return children.get(i);
     }
@@ -29,7 +29,7 @@ public class FolderObject extends FileSystemObject {
         throw new UnsupportedOperationException();
     }
     
-    public Iterator<FileSystemObject> createDeepIterator()
+    public Iterator<FileSystemObject> createDeepIterator()//note to self, check what this one does if the contents change between first call and use
     {
       if (iterator == null)
       {

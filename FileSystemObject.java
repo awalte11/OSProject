@@ -57,7 +57,16 @@ public abstract class FileSystemObject {
         return type;
     }
     
-    
+    public void refreshModified()
+    {
+        updated = LocalDate.now();
+    }
+
+    public int getSize()
+    {
+        return  size;
+    }
+
     
 
     
@@ -71,21 +80,11 @@ public abstract class FileSystemObject {
     }
     
     //This Iterator is for going over the whole tree, starting from the object in question.
-    //Do not use for just examining a single folder
-    //Fairly sure 
     public abstract Iterator<FileSystemObject> createDeepIterator();
 
+    //for iterating over the children of the object in question
     public abstract Iterator<FileSystemObject> createShallowIterator();
 
-    public void refreshModified()
-    {
-        updated = LocalDate.now();
-    }
-
-    public int getSize()
-    {
-        return  size;
-    }
 
 
 
@@ -93,6 +92,5 @@ public abstract class FileSystemObject {
     ///Composite pattern recommends you also have a default implementation here.
     ///If it doesn't make sense for a file - have the default throw the exception
     ///If it doesnt' make sense for a folder - have the folder implementation throw the default.
-    ///I'll set up the iterator shortly -Alex
 
 }
