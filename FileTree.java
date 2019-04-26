@@ -57,13 +57,27 @@ public class FileTree
         pathname += path.get(i).getName() + "/";
       }
       
-      return pathname + "\n";
+      return pathname;
     }
     
     //Checks if currently in root dir
     public boolean isRoot()
     {
       return root == path.getLast();
+    }
+
+    public boolean validatePathStep(String s)
+    {
+      switch(s)
+      {
+        case "\\":
+          return true; //return to root is always valid
+        case "..":
+          return (!isRoot()); //going up a folder is valid unless root
+        default:
+          return isFolderHere(s);
+        
+      }
     }
     
     //function that goes one step up the tree;
@@ -82,6 +96,71 @@ public class FileTree
     
     }
 
+    public boolean isFolderHere(String s)
+    {
+      Iterator<FileSystemObject> search = here.createShallowIterator();
+      while(search.hasNext())
+      {
+        FileSystemObject candidate = search.next();
+        if (candidate instanceof FolderObject && candidate.getName().equals(s))
+        {
+          return true;
+        }
+        
+      }
+      return false;
+
+    }
+
+    //Code for implemented commands goes here
+   
+
+    //Code stubs for NYI commands goes here
+    public String makeFile(String[] args)
+    {
+      return "Not yet implemented";
+
+    }
+
+
+	public String delete(String[] theseArgs) {
+    return "Not yet implemented";
+	}
+
+
+	public String makeFolder(String[] theseArgs) {
+    return "Not yet implemented";
+	}
+
+
+	public String rename(String[] theseArgs) {
+    return "Not yet implemented";
+	}
+
+
+	public String move(String[] theseArgs) {
+    return "Not yet implemented";
+	}
+
+
+	public String copy(String[] theseArgs) {
+    return "Not yet implemented";
+	}
+
+
+	public String changeDir(String[] theseArgs) {
+    return "Not yet implemented";
+	}
+
+
+	public String toRoot() {
+    return "Not yet implemented";
+	}
+
+
+	public String viewFolder(String[] theseArgs) {
+    return "Not yet implemented";
+	}
     
 
 }

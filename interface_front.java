@@ -5,12 +5,7 @@ public interface interface_front {
 	 * This is just an interface declaring the user-callable methods
 	 */
 
-	 /**
-	  * Converts user input to method call
-	  * first element of input is command rest is parameters
-	  * @param in input
-	  */
-	public void parseInput (String in);
+
 	
 
 	/**
