@@ -2,15 +2,9 @@ import java.util.Iterator;
 public class FileObject extends FileSystemObject {
     //file specific stuff goes here
 
-    public FileObject(String name, String type)
-    {
-        super(name, type);
-       
-        
-    }
 
     
-    public String getName()
+    public String getFullName()
     {
         return name +"." +type;
     }

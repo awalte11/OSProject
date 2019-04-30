@@ -23,6 +23,11 @@ public class FolderObject extends FileSystemObject {
     {
         return children.get(i);
     }
+	
+	public String getFullName()
+	{
+		return name +"/";
+	}
 
     public void setType(String type)
     {

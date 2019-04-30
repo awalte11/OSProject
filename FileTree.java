@@ -66,14 +66,17 @@ public class FileTree
       return root == path.getLast();
     }
 
-    public boolean validatePathStep(String s)
+
+	//TODO, overhaul this section to enable remote actions on files. Or just decide you can only operate on local folders
+
+    public boolean validatePathStep(String s, FileSystemObject o)
     {
       switch(s)
       {
         case "\\":
           return true; //return to root is always valid
         case "..":
-          return (!isRoot()); //going up a folder is valid unless root
+          return ( !o == root); //going up a folder is valid unless root
         default:
           return isFolderHere(s);
         
@@ -96,9 +99,9 @@ public class FileTree
     
     }
 
-    public boolean isFolderHere(String s)
+    public boolean isFolderHere(String s, FileSystemObject o)
     {
-      Iterator<FileSystemObject> search = here.createShallowIterator();
+      Iterator<FileSystemObject> search = o.createShallowIterator();
       while(search.hasNext())
       {
         FileSystemObject candidate = search.next();
@@ -114,6 +117,31 @@ public class FileTree
 
     //Code for implemented commands goes here
    
+   
+   //Code stubs for NYI commands file system functions alex is handling goes here.
+   public String openFile(String[] args)
+   {
+	   return "Not yet implemented";
+	   
+   }
+   
+   public String readFile(String[] args)
+   {
+	   return "Not yet implemented";
+	   
+   }
+   
+   public String writeFile(String[] args)
+   {
+	   return "Not yet implemented";
+	   
+   }
+   
+   public String closeFile(String[] args)
+   {
+	   return "Not yet implemented";
+	   
+   }
 
     //Code stubs for NYI commands goes here
     public String makeFile(String[] args)
@@ -124,7 +152,7 @@ public class FileTree
 
 
 	public String delete(String[] theseArgs) {
-    return "Not yet implemented";
+		return "Not yet implemented";
 	}
 
 

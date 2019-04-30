@@ -5,7 +5,14 @@ public abstract class FileSystemObject {
     protected String type;
     protected LocalDate updated;
     protected int size;
+	private int identifier;
     protected FileSystemObject parent;
+	private static int nextIdentifier = 0;
+
+	public int getIdentifier()
+	{
+		return identifier;
+	}
 
     public void add(FileSystemObject child) throws UnsupportedOperationException
     {
@@ -34,6 +41,9 @@ public abstract class FileSystemObject {
       parent = newParent;
       newParent.add(this);
     }
+	
+
+	public abstract String getFullName();
 
     public String getName()
     {
@@ -73,6 +83,7 @@ public abstract class FileSystemObject {
     public FileSystemObject(String name, String type)
     {
         this.name = name;
+		this.identifier = nextIdentifier++;
         this.type = type;
         this.updated = LocalDate.now();
         size = 1;
