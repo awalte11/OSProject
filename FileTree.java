@@ -76,9 +76,9 @@ public class FileTree
         case "\\":
           return true; //return to root is always valid
         case "..":
-          return ( !o == root); //going up a folder is valid unless root
+          return ( !(o == root)); //going up a folder is valid unless root
         default:
-          return isFolderHere(s);
+          return isFolderHere(s, o);
         
       }
     }
