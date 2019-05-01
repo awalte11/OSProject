@@ -4,7 +4,7 @@ public abstract class FileSystemObject {
     protected String name;
     protected String type;
     protected LocalDate updated;
-    protected int size;
+    protected int size = 1;
 	private int identifier;
     protected FileSystemObject parent;
 	private static int nextIdentifier = 0;
@@ -41,6 +41,8 @@ public abstract class FileSystemObject {
       parent = newParent;
       newParent.add(this);
     }
+
+    
 	
 
 	public abstract String getFullName();

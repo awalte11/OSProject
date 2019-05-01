@@ -41,9 +41,11 @@ public class FileSim
                     System.out.println(tree.copy(in));
                     break;
 
+                  
+                      
+                
                 case "cd":
-                case "cd..":
-                case "cd\\":
+                case "cd\\"://Note: This is cd\ when typing  
                     System.out.println(tree.changeDir(in));
                     break;
 

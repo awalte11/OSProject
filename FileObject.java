@@ -10,7 +10,7 @@ public class FileObject extends FileSystemObject {
     
     public String getFullName()
     {
-        return name +"." +type;
+        return name + "." + type;
     }
     
     public Iterator<FileSystemObject> createDeepIterator()

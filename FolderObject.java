@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class FolderObject extends FileSystemObject {
     ArrayList<FileSystemObject> children = new ArrayList<FileSystemObject>();//should probably replace with arrays. But I don't have the energy for shrink/expand array code right now
-    Iterator<FileSystemObject> iterator = null;
     
     public void add(FileSystemObject child)
     {
@@ -26,8 +25,20 @@ public class FolderObject extends FileSystemObject {
 	
 	public String getFullName()
 	{
-		return name +"/";
-	}
+		return name +"/ ";
+    }
+    
+    public int getSize()
+    {
+        Iterator<FileSystemObject> contents = createDeepIterator();
+        int out = 0;
+        while (contents.hasNext())
+        {
+            out += contents.next().getSize();
+        }        
+        return out;
+
+    }
 
     public void setType(String type)
     {
@@ -36,11 +47,7 @@ public class FolderObject extends FileSystemObject {
     
     public Iterator<FileSystemObject> createDeepIterator()//note to self, check what this one does if the contents change between first call and use
     {
-      if (iterator == null)
-      {
-        iterator = new CompositeIterator(children.iterator());
-      }
-      return iterator;
+      return new CompositeIterator(children.iterator());
     }
     
     public Iterator<FileSystemObject> createShallowIterator()
