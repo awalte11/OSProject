@@ -1,10 +1,13 @@
 import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Iterator;
 public class FileTree
 {
     private FileSystemObject root;
     private LinkedList<FileSystemObject> path = new LinkedList<FileSystemObject>();
     private FileSystemObject here;
+
+    private ArrayList<FileObject> openFiles = new ArrayList<FileObject>();
     
     
     public FileSystemObject currentFolder()
@@ -127,7 +130,7 @@ public class FileTree
 
 
     //If calling directly, always validate first
-    public FileSystemObject getFolder(String s, FileSystemObject o)
+    public FolderObject getFolder(String s, FileSystemObject o)
     {
       Iterator<FileSystemObject> search = o.createShallowIterator();
       while(search.hasNext())
@@ -135,7 +138,7 @@ public class FileTree
         FileSystemObject candidate = search.next();
         if (candidate instanceof FolderObject && candidate.getName().equals(s))
         {
-          return candidate;
+          return (FolderObject) candidate;
         }
         
       }
@@ -159,7 +162,7 @@ public class FileTree
     }
 
     //If calling directly, always validate first with hasFile
-    public FileSystemObject getFile(String s, FileSystemObject o)
+    public FileObject getFile(String s, FileSystemObject o)
     {
       Iterator<FileSystemObject> search = o.createShallowIterator();
       while(search.hasNext())
@@ -167,7 +170,7 @@ public class FileTree
         FileSystemObject candidate = search.next();
         if (candidate instanceof FileObject && candidate.getFullName().equals(s))
         {
-          return candidate;
+          return (FileObject) candidate;
         }
         
       }
@@ -192,13 +195,52 @@ public class FileTree
 
     //Code for implemented commands goes here
    
-   
+  public String openFile(String[] args)
+  {
+    if (args.length < 2)
+      return "Please supply a file name";
+
+    String fileName = args[1];
+    if (!hasFile(fileName, here))
+    {
+      return "File not found";
+    }
+    else
+    {
+      FileObject o = getFile(fileName, here);
+      if (openFiles.contains(o))
+        return o.getFullName() + " is already open. ID is " + o.getIdentifier();
+      else
+      {
+        openFiles.add(o);
+        return o.getFullName() + " is now open. ID is " + o.getIdentifier();
+      }
+
+    } 
+  }
+    public String closeFile(String[] args)
+    {
+      int id;
+     if (args.length < 2)
+       return "Please supply an integer file ID";
+     try {
+       id = Integer.parseInt(args[1]);
+     }
+     catch (NumberFormatException e){
+       return "Please supply an integer file ID";
+     }
+     boolean removed = openFiles.removeIf(o -> (o.getIdentifier() == id)  );
+     if (removed)
+       return "File closed";
+     else
+      return "File # " + id + " is not open";	   
+    }
    //Code stubs for NYI commands file system functions alex is handling goes here.
-   public String openFile(String[] args)
-   {
-	   return "Not yet implemented";
-	   
-   }
+
+   //Opens file and returns result. Moved here so I can play with implementation options without busting the public facing option
+
+   
+  
    
    public String readFile(String[] args)
    {
@@ -212,11 +254,7 @@ public class FileTree
 	   
    }
    
-   public String closeFile(String[] args)
-   {
-	   return "Not yet implemented";
-	   
-   }
+   
   /**
    * Routing notes
   * Windows comamnd prompt is requiring a space before .. now, so we will too.
@@ -225,6 +263,7 @@ public class FileTree
   *
   * Do cover multiple .. with a / between, windows lets you do that as long as you use chdir not cd
   * cases to cover: cd\, cd \, cd <path> where path sections are seperated by / and include .. for back
+  * The file system movement methods don't support pathing directly to files ATM.
   */
 
    //All input will be formatted as so: [{command}, {primary input}, {args}]. not sure we have args. Remember to pass the command when dealing
