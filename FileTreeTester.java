@@ -15,6 +15,8 @@ public class FileTreeTester{
     tree.toRoot();
     System.out.println(tree.currentFolder().getSize());
     Iterator<FileSystemObject> testIt = tree.currentFolder().createDeepIterator();
+    System.out.println(tree.openFile(new String[] {"open", "test.dum" }));
+    System.out.println(tree.writeFile(new String[] {"open", "Shine", "3" }));
     while(testIt.hasNext())
     {
       System.out.println(testIt.next().getFullName());

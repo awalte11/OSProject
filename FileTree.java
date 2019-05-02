@@ -235,25 +235,150 @@ public class FileTree
      else
       return "File # " + id + " is not open";	   
     }
-   //Code stubs for NYI commands file system functions alex is handling goes here.
-
+    
+    //For you guys to use when deleting
+    private void closeFileInternal (int id)
+    {
+      openFiles.removeIf(o -> (o.getIdentifier() == id)  );
+    }
    //Opens file and returns result. Moved here so I can play with implementation options without busting the public facing option
 
-   
+   private FileObject findOpenFile(int id){    
+    for (FileObject file : openFiles) {
+        if (file.getIdentifier() == id) {
+            return file;
+        }
+    }
+    return null; 
+}
   
    
    public String readFile(String[] args)
    {
-	   return "Not yet implemented";
-	   
+     
+     int id;
+     if (args.length < 2)
+       return "Please supply an integer file ID";
+     try {
+       id = Integer.parseInt(args[1]);
+     }
+     catch (NumberFormatException e){
+       return "Please supply an integer file ID";
+     }
+     FileObject readThis = findOpenFile(id);
+     if (args.length == 2)
+     {
+        return(readThis.read());
+     }
+     else if (args.length == 3)
+     {
+        int readStart = 0;
+        try {
+          readStart = Integer.parseInt(args[2]);
+        }
+        catch (NumberFormatException e){
+          return "Read start point must be an integer";
+        }
+        try {
+          return readThis.read(readStart);
+        }
+        catch (StringIndexOutOfBoundsException e) {
+          return "Read start point must be an integer less than the length of the data";
+        }
+     }
+     else if (args.length >= 4)
+     {
+        int readStart = 0;
+        int readend = 0;
+        try {
+          readStart = Integer.parseInt(args[2]);
+        }
+        catch (NumberFormatException e){
+          return "Read start point must be a positive integer";
+        }
+        if ( readStart < 0)
+          return "Read start point must be a positive integer";
+        try {
+          readend = Integer.parseInt(args[3]);
+        }
+        catch (NumberFormatException e){
+          return "Read stop point must be a positive integer";
+        }
+        try {
+          return readThis.read(readStart, readend);
+        }
+        catch (StringIndexOutOfBoundsException e) {
+          return "Invalid start or end: Must describe a subseqence of data";
+        }
+     }
+
+
+	   return "It's not actually possible to get this message, but the compiler insists it it must be a thing";
    }
    
    public String writeFile(String[] args)
    {
-	   return "Not yet implemented";
+    int id;
+    if (args.length < 3)
+      return "Please supply data (no spaces, sim limit) and a file id";
+    try {
+      id = Integer.parseInt(args[2]);
+    }
+    catch (NumberFormatException e){
+      return "Please supply an integer file ID";
+    }
+    FileObject readThis = findOpenFile(id);
+    if (args.length == 3)
+    {
+       return(readThis.write(args[1]));
+    }
+    else if (args.length == 4)
+    {
+       int readStart = 0;
+       try {
+         readStart = Integer.parseInt(args[3]);
+       }
+       catch (NumberFormatException e){
+         return "Write start point must be an integer";
+       }
+       try {
+        return(readThis.write(args[1], readStart));
+       }
+       catch (StringIndexOutOfBoundsException e) {
+         return "Write start point must be a integer less than the length of the data";
+       }
+    }
+    else if (args.length >= 5)
+    {
+       int readStart = 0;
+       int readend = 0;
+       try {
+         readStart = Integer.parseInt(args[3]);
+       }
+       catch (NumberFormatException e){
+         return "Write start point must be a positive integer";
+       }
+       try {
+         readend = Integer.parseInt(args[4]);
+       }
+       catch (NumberFormatException e){
+         return "Write stop point must be a positive integer";
+       }
+       try {
+        return(readThis.write(args[1], readStart, readend));
+       }
+       catch (StringIndexOutOfBoundsException e) {
+         return "Invalid start or end: Must describe a subseqence of data";
+       }
+    }
+
+
+    return "It's not actually possible to get this message, but the compiler insists it it must be a thing";
 	   
    }
    
+   //Code stubs for NYI commands file system functions alex is handling goes here.
+
    
   /**
    * Routing notes
@@ -276,6 +401,9 @@ public class FileTree
     }
 
 
+  //Suggestion: Do not allow deletes of non-empty folders
+  //Mandatory: Make sure either deletion closes files, or open files can't be deleted
+  //Use CloseFileInternal with Identifiers when closing
 	public String delete(String[] theseArgs) {
 
 		return "Not yet implemented";
@@ -296,7 +424,7 @@ public class FileTree
     return "Not yet implemented";
 	}
 
-
+  
 	public String copy(String[] theseArgs) {
     return "Not yet implemented";
 	}
