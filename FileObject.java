@@ -3,6 +3,10 @@ public class FileObject extends FileSystemObject {
     //file specific stuff goes here
     StringBuilder contents = new StringBuilder();
 
+    public int getSize()
+    {
+      return contents.length();
+    }
 
     public String read() 
     {
