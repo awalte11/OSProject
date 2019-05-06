@@ -58,7 +58,7 @@ public class FileTree
     {
       return s.split("/");
     }
-	
+ 
     //checks if the given path is valid
     public boolean validatePathStep(String s, FileSystemObject o)
     {
@@ -233,7 +233,7 @@ public class FileTree
      if (removed)
        return "File closed";
      else
-      return "File # " + id + " is not open";	   
+      return "File # " + id + " is not open";    
     }
     
     //For you guys to use when deleting
@@ -313,7 +313,7 @@ public class FileTree
      }
 
 
-	   return "It's not actually possible to get this message, but the compiler insists it it must be a thing";
+    return "It's not actually possible to get this message, but the compiler insists it it must be a thing";
    }
    
    public String writeFile(String[] args)
@@ -374,7 +374,7 @@ public class FileTree
 
 
     return "It's not actually possible to get this message, but the compiler insists it it must be a thing";
-	   
+    
    }
    
    //Code stubs for NYI commands file system functions alex is handling goes here.
@@ -395,8 +395,11 @@ public class FileTree
     //Code stubs for NYI commands goes here
     public String makeFile(String[] args)
     {
-
-        return "Not yet implemented";
+      String fullName= args[1];
+      String[] split = fullName.split("."); 
+      FileObject o = new FileObject(split[0], split[1]);
+      currentFolder().add(o);
+        return "File Created";
       
     }
 
@@ -404,45 +407,90 @@ public class FileTree
   //Suggestion: Do not allow deletes of non-empty folders
   //Mandatory: Make sure either deletion closes files, or open files can't be deleted
   //Use CloseFileInternal with Identifiers when closing
-	public String delete(String[] theseArgs) {
+ public String delete(String[] theseArgs) {
+   FileObject o = getFile(theseArgs[1], currentFolder());
+   FolderObject f = getFolder(theseArgs[1], currentFolder());
+   if(o!=null){
+     closeFileInternal(o.getIdentifier());
+     currentFolder().remove(o);
+     return "File Deleted";
+   }
+   else if(f!=null){
+     if(f.getSize()==0){
+       currentFolder().remove(f);
+       return "Folder Deleted";
+     }
+     else
+       return "folder not empty!";
+       
+   }
+  return "File or folder not found";
+ }
 
-		return "Not yet implemented";
-	}
+
+ public String makeFolder(String[] theseArgs) {
+   FolderObject o = new FolderObject(theseArgs[1]);
+   currentFolder().add(o);
+    return "Folder Created";
+ }
 
 
-	public String makeFolder(String[] theseArgs) {
+ public String rename(String[] theseArgs) {
+   FileObject o = getFile(theseArgs[1], currentFolder());
+   FolderObject f = getFolder(theseArgs[1], currentFolder());
+   if(o!=null){
+     o.setName(theseArgs[2]);
+     return "Name Changed";
+   }
+   else if(f!=null){
+     f.setName(theseArgs[2]);
+     return "Name Changed";
+   }
+     
+    return "File or Folder not found";
+ }
+
+
+ public String move(String[] theseArgs) {
     return "Not yet implemented";
-	}
-
-
-	public String rename(String[] theseArgs) {
-    return "Not yet implemented";
-	}
-
-
-	public String move(String[] theseArgs) {
-    return "Not yet implemented";
-	}
+ }
 
   
-	public String copy(String[] theseArgs) {
+ public String copy(String[] theseArgs) {
+    FileObject o = getFile(theseArgs[1], currentFolder());
+    if(o!=null)
+    {
+      FileObject p = new FileObject(o.name, o.type);
+      currentFolder().add(p);
+      return "File Copied";
+    }
+    return "File not found to copy";
+ }
+
+
+ public String changeDir(String[] theseArgs) {
     return "Not yet implemented";
-	}
+ }
 
 
-	public String changeDir(String[] theseArgs) {
-    return "Not yet implemented";
-	}
+ public String toRoot() {
+   if(isRoot())
+     return "Already in root";
+   path.clear();
+   path.addFirst(root);
+   return "Returned to root";
+ }
 
 
-	public String toRoot() {
-    return "Not yet implemented";
-	}
-
-
-	public String viewFolder(String[] theseArgs) {
-    return "Not yet implemented";
-	}
+ public String viewFolder(String[] theseArgs) {
+   Iterator<FileSystemObject> search = currentFolder().createShallowIterator();
+   while(search.hasNext())
+   {
+     FileSystemObject candidate = search.next();
+     System.out.println(candidate.getFullName());
+   }
+   return "";
+ }
     
 
 }
