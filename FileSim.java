@@ -102,7 +102,7 @@ public class FileSim
         System.out.println("");
         System.out.println("Move a file or  folder: 'move' name newpath");
         System.out.println("");
-        System.out.println("Copy a file or  folder: 'move' name newpath");
+        System.out.println("Copy a file or  folder: 'copy' name new name");
         System.out.println("");
         System.out.println("Change active folder: 'cd' newpath");
         System.out.println("");

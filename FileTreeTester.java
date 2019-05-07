@@ -1,27 +1,52 @@
 import java.util.Iterator;
 public class FileTreeTester{
 
+  public static int commandCount = 0;
+  static FileTree tree;
   public static void main(String[] args)
   {
-    FileTree tree = new FileTree();
-    System.out.printf(tree.getPath());
+    tree = new FileTree();
+    lineRep();
     tree.currentFolder().add(new FolderObject("test"));
+    lineRep();
     tree.currentFolder().add(new FolderObject("test2"));
+    lineRep();
     tree.currentFolder().add(new FileObject("test", "dum"));
-    tree.followPath(new String[] {"test"}, tree.currentFolder());
-
+    lineRep();
+    System.out.println(tree.changeDir(new String[] {"cd", "test" }));
+    lineRep();
     tree.currentFolder().add(new FileObject("test4", "dum"));
+    lineRep();
     tree.currentFolder().add(new FileObject("tes2t", "dum"));
-    tree.toRoot();
+    lineRep();
+    //tree.toRoot();
     System.out.println(tree.currentFolder().getSize());
+    lineRep();
     Iterator<FileSystemObject> testIt = tree.currentFolder().createDeepIterator();
-    System.out.println(tree.openFile(new String[] {"open", "test.dum" }));
-    System.out.println(tree.writeFile(new String[] {"open", "Shine", "3" }));
+    lineRep();
+    while(testIt.hasNext())
+    {
+      System.out.println(testIt.next().getFullName());
+      lineRep();
+    }
+    
+    System.out.println(tree.makeFile(new String[] {"make", "test4.dum" }));
+    lineRep();
+    System.out.println(tree.openFile(new String[] {"open", "test4.dum" }));
+    lineRep();
+    System.out.println(tree.openFile(new String[] {"open", "test4.dum" }));
+    System.out.println(tree.writeFile(new String[] {"write", "Shine", "3" }));
     while(testIt.hasNext())
     {
       System.out.println(testIt.next().getFullName());
     }
     System.out.println(tree.currentFolder().getSize());
     
+  }
+
+  private static void lineRep()
+  {
+    commandCount++;
+    System.out.println(commandCount + "path: " + tree.getPath());
   }
 }

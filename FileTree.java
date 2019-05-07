@@ -21,7 +21,7 @@ public class FileTree
         return root;
     }
 
-    
+
 
    
 
@@ -152,6 +152,7 @@ public class FileTree
       while(search.hasNext())
       {
         FileSystemObject candidate = search.next();
+        System.out.println (s + " " + candidate.getFullName());
         if (candidate instanceof FolderObject && candidate.getName().equals(s))
         {
           return true;
@@ -183,7 +184,9 @@ public class FileTree
       Iterator<FileSystemObject> search = o.createShallowIterator();
       while(search.hasNext())
       {
+        
         FileSystemObject candidate = search.next();
+        System.out.println ("Check: " + s + " " + candidate.getFullName());
         if (candidate instanceof FileObject && candidate.getFullName().equals(s))
         {
           return true;
@@ -193,9 +196,9 @@ public class FileTree
       return false;
     }
 
-    //Code for implemented commands goes here
+  //Code for implemented commands goes here
    
-  public String openFile(String[] args)
+  public String openFile(String[] args)//Alex Walters
   {
     if (args.length < 2)
       return "Please supply a file name";
@@ -218,21 +221,21 @@ public class FileTree
 
     } 
   }
-    public String closeFile(String[] args)
-    {
-      int id;
-     if (args.length < 2)
-       return "Please supply an integer file ID";
-     try {
+  public String closeFile(String[] args)//Alex walters
+  {
+    int id;
+    if (args.length < 2)
+      return "Please supply an integer file ID";
+    try {
        id = Integer.parseInt(args[1]);
-     }
-     catch (NumberFormatException e){
-       return "Please supply an integer file ID";
-     }
-     boolean removed = openFiles.removeIf(o -> (o.getIdentifier() == id)  );
-     if (removed)
-       return "File closed";
-     else
+    }
+    catch (NumberFormatException e){
+      return "Please supply an integer file ID";
+    }
+    boolean removed = openFiles.removeIf(o -> (o.getIdentifier() == id)  );
+    if (removed)
+      return "File closed";
+    else
       return "File # " + id + " is not open";    
     }
     
@@ -253,7 +256,7 @@ public class FileTree
 }
   
    
-   public String readFile(String[] args)
+   public String readFile(String[] args)//Alex Walters
    {
      
      int id;
@@ -266,6 +269,8 @@ public class FileTree
        return "Please supply an integer file ID";
      }
      FileObject readThis = findOpenFile(id);
+     if (readThis == null)
+     return "Bad file Id";
      if (args.length == 2)
      {
         return(readThis.read());
@@ -316,7 +321,7 @@ public class FileTree
     return "It's not actually possible to get this message, but the compiler insists it it must be a thing";
    }
    
-   public String writeFile(String[] args)
+   public String writeFile(String[] args)//Alex Walters
    {
     int id;
     if (args.length < 3)
@@ -328,6 +333,8 @@ public class FileTree
       return "Please supply an integer file ID";
     }
     FileObject readThis = findOpenFile(id);
+    if (readThis == null)
+      return "Bad file Id";
     if (args.length == 3)
     {
        return(readThis.write(args[1]));
@@ -393,13 +400,26 @@ public class FileTree
 
    //All input will be formatted as so: [{command}, {primary input}, {args}]. not sure we have args. Remember to pass the command when dealing
     //Code stubs for NYI commands goes here
-    public String makeFile(String[] args)
+    public String makeFile(String[] args)//Brad, with tweaks by alex
     {
-      String fullName= args[1];
-      String[] split = fullName.split("."); 
-      FileObject o = new FileObject(split[0], split[1]);
-      currentFolder().add(o);
-        return "File Created";
+      if (args.length < 2)
+        return "Please supply a new file name";
+      if (hasFile(args[1], here))
+        return "File already exists here";
+      String fullName = args[1];
+      System.out.print(fullName);
+      String[] split = fullName.split("\\."); 
+      System.out.print(split.length);
+      for (String s : split) {
+        System.out.println(s);
+      }
+      if (split.length < 2)
+      {
+        return "Please supply a file name and extension.";
+      }
+;
+      currentFolder().add(new FileObject(split[0], split[1]));
+      return "File Created: " + fullName;
       
     }
 
@@ -407,7 +427,10 @@ public class FileTree
   //Suggestion: Do not allow deletes of non-empty folders
   //Mandatory: Make sure either deletion closes files, or open files can't be deleted
   //Use CloseFileInternal with Identifiers when closing
- public String delete(String[] theseArgs) {
+ public String delete(String[] theseArgs) //Brad, with tweaks from alex
+  {
+    if (theseArgs.length < 2)
+       return "Please supply a file name to nuke";
    FileObject o = getFile(theseArgs[1], currentFolder());
    FolderObject f = getFolder(theseArgs[1], currentFolder());
    if(o!=null){
@@ -428,21 +451,33 @@ public class FileTree
  }
 
 
- public String makeFolder(String[] theseArgs) {
+ public String makeFolder(String[] theseArgs)//Brad, with errpr check by alex
+  {
+    if (theseArgs.length < 2)
+       return "Please supply a file name to make";
+    if (hasFolder(theseArgs[1], here))
+      return "Folder already exists here";
    FolderObject o = new FolderObject(theseArgs[1]);
    currentFolder().add(o);
     return "Folder Created";
  }
 
 
- public String rename(String[] theseArgs) {
+ public String rename(String[] theseArgs)//Brad, with errpr check by alex 
+  {
+   if (theseArgs.length < 3)
+       return "Please supply old and new names";
    FileObject o = getFile(theseArgs[1], currentFolder());
    FolderObject f = getFolder(theseArgs[1], currentFolder());
    if(o!=null){
+    if (hasFile(theseArgs[2], here))
+      return "File already exists here";
      o.setName(theseArgs[2]);
      return "Name Changed";
    }
    else if(f!=null){
+    if (hasFolder(theseArgs[2], here))
+      return "Folder already exists here";
      f.setName(theseArgs[2]);
      return "Name Changed";
    }
@@ -452,15 +487,45 @@ public class FileTree
 
 
  public String move(String[] theseArgs) {
-    return "Not yet implemented";
+  if (theseArgs.length < 3)
+  return "Please supply name and target path";
+  String[] path = theseArgs[2].split("/");
+  FileSystemObject object;
+  if (hasFile(theseArgs[1], here))
+  {
+    object = getFile(theseArgs[1], here);
+  }
+  else if (hasFolder(theseArgs[1], here))
+  {
+    object = getFolder(theseArgs[1], here);
+  }
+  else 
+    return "File or folder not found";
+  if (validatePath(path, here))
+  {
+    FileSystemObject targetLoc = followPath(path, here);
+    if (hasFolder(theseArgs[2], targetLoc) || hasFile(theseArgs[2], targetLoc))
+      return "Target location already has an object with this name";
+    object.parent.remove(object);
+    targetLoc.add(object);
+  }
+  return "Invalid path";
+    
  }
 
   
- public String copy(String[] theseArgs) {
+ public String copy(String[] theseArgs)
+  {
+    if (theseArgs.length < 3)
+      return "Please supply name and new name path";
+    
+    String[] split = theseArgs[2].split("\\."); 
+    if (split.length < 2)
+     return "Please supply a file name and extension.";
     FileObject o = getFile(theseArgs[1], currentFolder());
     if(o!=null)
     {
-      FileObject p = new FileObject(o.name, o.type);
+      FileObject p = new FileObject(split[0], split[1]);
       currentFolder().add(p);
       return "File Copied";
     }
@@ -469,11 +534,46 @@ public class FileTree
 
 
  public String changeDir(String[] theseArgs) {
-    return "Not yet implemented";
+    if (theseArgs[0].equals("cd\\"))
+      return toRoot();
+    else
+    {
+      if (theseArgs.length < 2)
+        return "Please supply a new path";
+      String[] pathS = theseArgs[1].split("/");
+      if (validatePath(pathS, here))
+      {
+        System.out.println("Start: " + here.name);
+        here = followPath(pathS, here);
+        System.out.println("End:" + here.name);
+        resetPath();
+        System.out.println("End2:" + here.name);
+        System.out.println("End:" + path.getLast().getFullName());
+        return "Directory change successful";
+      }
+      
+      return "Invalid path";
+    }
+    
  }
 
 
- public String toRoot() {
+
+
+
+
+  private void resetPath() {
+    LinkedList<FileSystemObject> newPath = new LinkedList<FileSystemObject>();
+    FileSystemObject tempHere = here;
+    while (tempHere.parent != null)
+    {
+      newPath.addLast(tempHere);
+      tempHere = tempHere.parent;
+    }
+    newPath.addLast(tempHere);
+  }
+
+  public String toRoot() {
    if(isRoot())
      return "Already in root";
    path.clear();

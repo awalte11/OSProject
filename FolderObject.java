@@ -52,6 +52,7 @@ public class FolderObject extends FileSystemObject {
     
     public Iterator<FileSystemObject> createShallowIterator()
     {
+        System.out.println("Folder kids:" + children.size());
       return children.iterator();
     }
     
