@@ -1,9 +1,11 @@
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Iterator;
 public abstract class FileSystemObject {
     protected String name;
     protected String type;
-    protected LocalDate updated;
+    protected LocalDate updatedD;
+    protected LocalTime updatedT;
     protected int size = 1;
 	private int identifier;
     protected FileSystemObject parent;
@@ -69,9 +71,10 @@ public abstract class FileSystemObject {
         return type;
     }
     
-    public void refreshModified()
+    protected void refreshModified()
     {
-        updated = LocalDate.now();
+        updatedD = LocalDate.now();
+        updatedT = LocalTime.now();
     }
 
     public int getSize()
@@ -79,7 +82,19 @@ public abstract class FileSystemObject {
         return  size;
     }
 
-    
+    public LocalDate getModifiedD()
+    {
+        return updatedD;
+    }
+    public LocalTime getModifiedT()
+    {
+        return updatedT;
+    }
+
+    public String getModified()
+    {
+        return updatedT.toString().substring(0, 8) + "  " + updatedD.toString();
+    }
 
     
     public FileSystemObject(String name, String type)
@@ -87,7 +102,8 @@ public abstract class FileSystemObject {
         this.name = name;
 		this.identifier = nextIdentifier++;
         this.type = type;
-        this.updated = LocalDate.now();
+        this.updatedD = LocalDate.now();
+        this.updatedT = LocalTime.now();
         size = 1;
         //NO parent-related functions can go here, as this constructor must be able to deal with the creation of the root folder
     }

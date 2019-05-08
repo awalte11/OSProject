@@ -25,16 +25,19 @@ public class FileObject extends FileSystemObject {
 
     public String write(String s)
     {
+      refreshModified();
       contents = new StringBuilder(s);
       return s.toString();
     }
     public String write(String s, int start) throws StringIndexOutOfBoundsException 
     {
+      refreshModified();
       contents = contents.replace(start, start + s.length() -1, s);
       return s.toString();
     }
     public String write(String s, int start, int end) throws StringIndexOutOfBoundsException 
     {
+      refreshModified();
       contents = contents.replace(start, end, s);
       return s.toString();
     }

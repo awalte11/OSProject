@@ -577,7 +577,7 @@ public class FileTree
    String out = "";
    Iterator<FileSystemObject> search = currentFolder().createShallowIterator();
 
-   out += "Name\t\t\t\tSize\tID\n";
+   out += "Name\t\t\t\tSize\tID\tLast Modified\n";
    while(search.hasNext())
    {
      
@@ -595,7 +595,7 @@ public class FileTree
      {
       out +="\t";
      }
-     out += candidate.getSize() +"\t" + candidate.getIdentifier() + "\n";
+     out += candidate.getSize() +"\t" + candidate.getIdentifier() + "\t" + candidate.getModified().toString() + "\n";
      
    }
    return out;
