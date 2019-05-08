@@ -22,12 +22,12 @@ public class FolderObject extends FileSystemObject {
     {
         return children.get(i);
     }
-	
+	@Override
 	public String getFullName()
 	{
 		return name +"/ ";
     }
-    
+    @Override
     public int getSize()
     {
         Iterator<FileSystemObject> contents = createDeepIterator();
@@ -52,7 +52,6 @@ public class FolderObject extends FileSystemObject {
     
     public Iterator<FileSystemObject> createShallowIterator()
     {
-        System.out.println("Folder kids:" + children.size());
       return children.iterator();
     }
     

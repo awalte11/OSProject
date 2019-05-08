@@ -2,7 +2,7 @@ import java.util.Iterator;
 public class FileObject extends FileSystemObject {
     //file specific stuff goes here
     StringBuilder contents = new StringBuilder();
-
+    @Override
     public int getSize()
     {
       return contents.length();
@@ -44,17 +44,18 @@ public class FileObject extends FileSystemObject {
     {
       super(name, type);
     }
-    
+
+    @Override
     public String getFullName()
     {
         return name + "." + type;
     }
-    
+    @Override
     public Iterator<FileSystemObject> createDeepIterator()
     {
       return new NullIterator();
     }
-    
+    @Override
      public Iterator<FileSystemObject> createShallowIterator()
     {
       return new NullIterator();

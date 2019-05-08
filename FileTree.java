@@ -10,13 +10,13 @@ public class FileTree
     private ArrayList<FileObject> openFiles = new ArrayList<FileObject>();
     
     
-    public FileSystemObject currentFolder()
+    private FileSystemObject currentFolder()
     {
       return path.getLast();
     }
 
 
-    public FileSystemObject getRoot()
+    private FileSystemObject getRoot()
     {
         return root;
     }
@@ -112,7 +112,7 @@ public class FileTree
    * @param path
    * @return
    */
-    public FileSystemObject followPath(String[] path, FileSystemObject o)
+    private FileSystemObject followPath(String[] path, FileSystemObject o)
     {
       boolean valid = true;
       int step = 0;
@@ -130,7 +130,7 @@ public class FileTree
 
 
     //If calling directly, always validate first
-    public FolderObject getFolder(String s, FileSystemObject o)
+    private FolderObject getFolder(String s, FileSystemObject o)
     {
       Iterator<FileSystemObject> search = o.createShallowIterator();
       while(search.hasNext())
@@ -146,13 +146,12 @@ public class FileTree
 
     }
 
-    public boolean hasFolder(String s, FileSystemObject o)
+    private boolean hasFolder(String s, FileSystemObject o)
     {
       Iterator<FileSystemObject> search = o.createShallowIterator();
       while(search.hasNext())
       {
         FileSystemObject candidate = search.next();
-        System.out.println (s + " " + candidate.getFullName());
         if (candidate instanceof FolderObject && candidate.getName().equals(s))
         {
           return true;
@@ -163,7 +162,7 @@ public class FileTree
     }
 
     //If calling directly, always validate first with hasFile
-    public FileObject getFile(String s, FileSystemObject o)
+    private FileObject getFile(String s, FileSystemObject o)
     {
       Iterator<FileSystemObject> search = o.createShallowIterator();
       while(search.hasNext())
@@ -179,14 +178,13 @@ public class FileTree
 
     }
 
-    public boolean hasFile(String s, FileSystemObject o)
+    private boolean hasFile(String s, FileSystemObject o)
     {
       Iterator<FileSystemObject> search = o.createShallowIterator();
       while(search.hasNext())
       {
         
         FileSystemObject candidate = search.next();
-        System.out.println ("Check: " + s + " " + candidate.getFullName());
         if (candidate instanceof FileObject && candidate.getFullName().equals(s))
         {
           return true;
@@ -270,7 +268,7 @@ public class FileTree
      }
      FileObject readThis = findOpenFile(id);
      if (readThis == null)
-     return "Bad file Id";
+      return "Bad file Id";
      if (args.length == 2)
      {
         return(readThis.read());
@@ -384,7 +382,7 @@ public class FileTree
     
    }
    
-   //Code stubs for NYI commands file system functions alex is handling goes here.
+   
 
    
   /**
@@ -407,17 +405,13 @@ public class FileTree
       if (hasFile(args[1], here))
         return "File already exists here";
       String fullName = args[1];
-      System.out.print(fullName);
+
       String[] split = fullName.split("\\."); 
-      System.out.print(split.length);
-      for (String s : split) {
-        System.out.println(s);
-      }
       if (split.length < 2)
       {
         return "Please supply a file name and extension.";
       }
-;
+      
       currentFolder().add(new FileObject(split[0], split[1]));
       return "File Created: " + fullName;
       
@@ -543,12 +537,8 @@ public class FileTree
       String[] pathS = theseArgs[1].split("/");
       if (validatePath(pathS, here))
       {
-        System.out.println("Start: " + here.name);
         here = followPath(pathS, here);
-        System.out.println("End:" + here.name);
         resetPath();
-        System.out.println("End2:" + here.name);
-        System.out.println("End:" + path.getLast().getFullName());
         return "Directory change successful";
       }
       
@@ -567,10 +557,11 @@ public class FileTree
     FileSystemObject tempHere = here;
     while (tempHere.parent != null)
     {
-      newPath.addLast(tempHere);
+      newPath.addFirst(tempHere);
       tempHere = tempHere.parent;
     }
-    newPath.addLast(tempHere);
+    newPath.addFirst(tempHere);
+    path = newPath;
   }
 
   public String toRoot() {
@@ -583,13 +574,31 @@ public class FileTree
 
 
  public String viewFolder(String[] theseArgs) {
+   String out = "";
    Iterator<FileSystemObject> search = currentFolder().createShallowIterator();
+
+   out += "Name\t\t\t\tSize\tID\n";
    while(search.hasNext())
    {
+     
      FileSystemObject candidate = search.next();
-     System.out.println(candidate.getFullName());
+     out += candidate.getFullName() + "\t";
+     if (candidate.getFullName().length() <=6)
+     {
+       out +="\t";
+     }
+     if (candidate.getFullName().length() <=13)
+     {
+      out +="\t";
+     }
+     if (candidate.getFullName().length() <=19)
+     {
+      out +="\t";
+     }
+     out += candidate.getSize() +"\t" + candidate.getIdentifier() + "\n";
+     
    }
-   return "";
+   return out;
  }
     
 

@@ -12,7 +12,7 @@ public class FileSim
         System.out.println("Welcome to the file sim");
         while(!done)
         {
-            System.out.println(tree.getPath() +":");
+            System.out.printf(tree.getPath() +":");
             String[] in = input.nextLine().split(" ");
 
 
@@ -28,6 +28,7 @@ public class FileSim
                     System.out.println(tree.delete(in));
                     break;
                 case "mkfolder":
+                case "mkdir":
                     System.out.println(tree.makeFolder(in));
                     break;
                 case "rn":

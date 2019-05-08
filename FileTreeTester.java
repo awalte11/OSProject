@@ -7,46 +7,38 @@ public class FileTreeTester{
   {
     tree = new FileTree();
     lineRep();
-    tree.currentFolder().add(new FolderObject("test"));
+    System.out.println(tree.makeFolder(new String[] {"makefolder", "tFer"}));
     lineRep();
-    tree.currentFolder().add(new FolderObject("test2"));
+    System.out.println(tree.makeFolder(new String[] {"makefolder", "testFolder2"}));
     lineRep();
-    tree.currentFolder().add(new FileObject("test", "dum"));
+    System.out.println(tree.makeFile(new String[] {"makeFile", "testfile.dum"}));
     lineRep();
-    System.out.println(tree.changeDir(new String[] {"cd", "test" }));
+    System.out.println(tree.changeDir(new String[] {"cd", "testFolder" }));
     lineRep();
-    tree.currentFolder().add(new FileObject("test4", "dum"));
+    System.out.println(tree.makeFile(new String[] {"makeFile", "testfile2.dum"}));
     lineRep();
-    tree.currentFolder().add(new FileObject("tes2t", "dum"));
+    System.out.println(tree.makeFile(new String[] {"makeFile", "testfile4.dum"}));
     lineRep();
-    //tree.toRoot();
-    System.out.println(tree.currentFolder().getSize());
-    lineRep();
-    Iterator<FileSystemObject> testIt = tree.currentFolder().createDeepIterator();
-    lineRep();
-    while(testIt.hasNext())
-    {
-      System.out.println(testIt.next().getFullName());
-      lineRep();
-    }
+    System.out.println(tree.viewFolder(new String[] {"makeFile", "testfile4.dum"}));
+
+
     
     System.out.println(tree.makeFile(new String[] {"make", "test4.dum" }));
     lineRep();
     System.out.println(tree.openFile(new String[] {"open", "test4.dum" }));
     lineRep();
-    System.out.println(tree.openFile(new String[] {"open", "test4.dum" }));
-    System.out.println(tree.writeFile(new String[] {"write", "Shine", "3" }));
-    while(testIt.hasNext())
-    {
-      System.out.println(testIt.next().getFullName());
-    }
-    System.out.println(tree.currentFolder().getSize());
+    System.out.println(tree.openFile(new String[] {"open", "testfile4.dum" }));
+    lineRep();
+    System.out.println(tree.writeFile(new String[] {"write", "Shine", "5" }));
+    System.out.println(tree.viewFolder(new String[] {}));
+
+   
     
   }
 
   private static void lineRep()
   {
     commandCount++;
-    System.out.println(commandCount + "path: " + tree.getPath());
+    System.out.println(commandCount + " path: " + tree.getPath());
   }
 }
