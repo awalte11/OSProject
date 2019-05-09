@@ -16,10 +16,6 @@ public class FileTree
     }
 
 
-    private FileSystemObject getRoot()
-    {
-        return root;
-    }
 
 
 
@@ -96,7 +92,7 @@ public class FileTree
   private FileSystemObject FollowPathStep(String pathStep, FileSystemObject current) {
       switch(pathStep)
       {
-        case "\\": //note: this is actually TWO \ input wise as the first \ of each pair makes the next one be read literally.
+        case "\\": //note: this is actually one \ input wise as the first \ makes the next one be read literally.
           return root; //return to root is always valid
         case "..":
           return current.parent; //going up a folder is valid unless root
@@ -464,9 +460,13 @@ public class FileTree
    FileObject o = getFile(theseArgs[1], currentFolder());
    FolderObject f = getFolder(theseArgs[1], currentFolder());
    if(o!=null){
+     String[] newName = theseArgs[2].split("\\.");
+    if (newName.length < 2)
+      return "New name must be valid";
     if (hasFile(theseArgs[2], here))
       return "File already exists here";
-     o.setName(theseArgs[2]);
+     o.setName(newName[0]);
+     o.setType(newName[1]);
      return "Name Changed";
    }
    else if(f!=null){
@@ -532,9 +532,13 @@ public class FileTree
       return toRoot();
     else
     {
-      if (theseArgs.length < 2)
+      String[] pathS;
+      if (theseArgs[0].equals("cd\\"))
+        pathS = new String[] {".."};
+      else if (theseArgs.length < 2)
         return "Please supply a new path";
-      String[] pathS = theseArgs[1].split("/");
+      else
+        pathS = theseArgs[1].split("/");
       if (validatePath(pathS, here))
       {
         here = followPath(pathS, here);
@@ -569,6 +573,7 @@ public class FileTree
      return "Already in root";
    path.clear();
    path.addFirst(root);
+   here = root;
    return "Returned to root";
  }
 

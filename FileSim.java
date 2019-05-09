@@ -1,5 +1,4 @@
-import java.io.*;
-import java.util.Arrays;
+
 import java.util.Scanner;
 public class FileSim
 {
@@ -28,6 +27,8 @@ public class FileSim
                     System.out.println(tree.delete(in));
                     break;
                 case "mkfolder":
+                case "makedir":
+                case "makefolder":
                 case "mkdir":
                     System.out.println(tree.makeFolder(in));
                     break;
@@ -46,6 +47,7 @@ public class FileSim
                       
                 
                 case "cd":
+                case "cd..":
                 case "cd\\"://Note: This is cd\ when typing  
                     System.out.println(tree.changeDir(in));
                     break;
@@ -67,11 +69,15 @@ public class FileSim
                 case "close":
                     System.out.println(tree.closeFile(in));
                     break;
-                    case "read":
+                case "read":
                     System.out.println(tree.readFile(in));
                     break;
-                    case "write":
+                case "write":
                     System.out.println(tree.writeFile(in));
+                    break;
+                case "q":
+                case "quit":
+                    done = true;
                     break;
 
                 default:
@@ -97,7 +103,7 @@ public class FileSim
         System.out.println("");
         System.out.println("Delete a file or folder: 'del' name");
         System.out.println("");
-        System.out.println("Make a folder: 'mkfolder' name");
+        System.out.println("Make a folder: 'mkfolder' or 'mkdir' or 'makedir' or 'makefolder' name");
         System.out.println("");
         System.out.println("Rename a file or  folder: 'rn' or 'rename' oldname newname");
         System.out.println("");
@@ -106,6 +112,8 @@ public class FileSim
         System.out.println("Copy a file or  folder: 'copy' name new name");
         System.out.println("");
         System.out.println("Change active folder: 'cd' newpath");
+        System.out.println("");
+        System.out.println("Move to parent: 'cd..'");
         System.out.println("");
         System.out.println("Return to root active folder: 'cd\\'");
         System.out.println("");

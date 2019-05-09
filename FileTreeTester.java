@@ -1,4 +1,4 @@
-import java.util.Iterator;
+
 public class FileTreeTester{
 
   public static int commandCount = 0;
@@ -20,6 +20,7 @@ public class FileTreeTester{
     System.out.println(tree.makeFile(new String[] {"makeFile", "testfile4.dum"}));
     lineRep();
     System.out.println(tree.viewFolder(new String[] {"makeFile", "testfile4.dum"}));
+  
 
 
     

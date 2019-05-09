@@ -27,19 +27,19 @@ public class FileObject extends FileSystemObject {
     {
       refreshModified();
       contents = new StringBuilder(s);
-      return s.toString();
+      return "File: " + getFullName() + " contains: " + contents.toString();
     }
     public String write(String s, int start) throws StringIndexOutOfBoundsException 
     {
       refreshModified();
       contents = contents.replace(start, start + s.length() -1, s);
-      return s.toString();
+      return "File: " + getFullName() + " contains: " + contents.toString();
     }
     public String write(String s, int start, int end) throws StringIndexOutOfBoundsException 
     {
       refreshModified();
       contents = contents.replace(start, end, s);
-      return s.toString();
+      return "File: " + getFullName() + " contains: " + contents.toString();
     }
 
     //Do not call from anywhere but inside calls to add method in FolderObject
