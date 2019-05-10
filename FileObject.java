@@ -13,15 +13,6 @@ public class FileObject extends FileSystemObject {
       return contents.toString();
     }
 
-    public String read(int start) throws StringIndexOutOfBoundsException 
-    {
-      return contents.substring(start);
-    }
-
-    public String read(int start, int end) throws StringIndexOutOfBoundsException 
-    {
-      return contents.substring(start, end);
-    }
 
     public String write(String s)
     {
@@ -29,18 +20,7 @@ public class FileObject extends FileSystemObject {
       contents = new StringBuilder(s);
       return "File: " + getFullName() + " contains: " + contents.toString();
     }
-    public String write(String s, int start) throws StringIndexOutOfBoundsException 
-    {
-      refreshModified();
-      contents = contents.replace(start, start + s.length() -1, s);
-      return "File: " + getFullName() + " contains: " + contents.toString();
-    }
-    public String write(String s, int start, int end) throws StringIndexOutOfBoundsException 
-    {
-      refreshModified();
-      contents = contents.replace(start, end, s);
-      return "File: " + getFullName() + " contains: " + contents.toString();
-    }
+
 
     //Do not call from anywhere but inside calls to add method in FolderObject
     public FileObject(String name, String type)
@@ -63,4 +43,11 @@ public class FileObject extends FileSystemObject {
     {
       return new NullIterator();
     }
+
+	@Override
+	public FileSystemObject clone() {
+		FileObject clone = new FileObject(name, type);
+		clone.contents = new StringBuilder(contents);
+		return clone;
+	}
 }

@@ -61,6 +61,15 @@ public class FolderObject extends FileSystemObject {
         
         
     }
+	@Override
+	public FileSystemObject clone() {
+		FolderObject clone = new FolderObject (name);
+		for (FileSystemObject f : children)
+		{
+			clone.add(f.clone());
+		}
+		return clone;
+	}
 
 
 

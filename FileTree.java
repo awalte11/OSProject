@@ -1,5 +1,5 @@
 import java.util.LinkedList;
-import java.util.ArrayList;
+
 import java.util.Iterator;
 public class FileTree
 {
@@ -7,7 +7,7 @@ public class FileTree
     private LinkedList<FileSystemObject> path = new LinkedList<FileSystemObject>();
     private FileSystemObject here;
 
-    private ArrayList<FileObject> openFiles = new ArrayList<FileObject>();
+
     
     
     private FileSystemObject currentFolder()
@@ -192,189 +192,47 @@ public class FileTree
 
   //Code for implemented commands goes here
    
-  public String openFile(String[] args)//Alex Walters
-  {
-    if (args.length < 2)
-      return "Please supply a file name";
 
-    String fileName = args[1];
-    if (!hasFile(fileName, here))
-    {
-      return "File not found";
-    }
-    else
-    {
-      FileObject o = getFile(fileName, here);
-      if (openFiles.contains(o))
-        return o.getFullName() + " is already open. ID is " + o.getIdentifier();
-      else
-      {
-        openFiles.add(o);
-        return o.getFullName() + " is now open. ID is " + o.getIdentifier();
-      }
-
-    } 
-  }
-  public String closeFile(String[] args)//Alex walters
-  {
-    int id;
-    if (args.length < 2)
-      return "Please supply an integer file ID";
-    try {
-       id = Integer.parseInt(args[1]);
-    }
-    catch (NumberFormatException e){
-      return "Please supply an integer file ID";
-    }
-    boolean removed = openFiles.removeIf(o -> (o.getIdentifier() == id)  );
-    if (removed)
-      return "File closed";
-    else
-      return "File # " + id + " is not open";    
-    }
-    
-    //For you guys to use when deleting
-    private void closeFileInternal (int id)
-    {
-      openFiles.removeIf(o -> (o.getIdentifier() == id)  );
-    }
-   //Opens file and returns result. Moved here so I can play with implementation options without busting the public facing option
-
-   private FileObject findOpenFile(int id){    
-    for (FileObject file : openFiles) {
-        if (file.getIdentifier() == id) {
-            return file;
-        }
-    }
-    return null; 
-}
   
    
    public String readFile(String[] args)//Alex Walters
    {
      
-     int id;
+     
      if (args.length < 2)
-       return "Please supply an integer file ID";
-     try {
-       id = Integer.parseInt(args[1]);
-     }
-     catch (NumberFormatException e){
-       return "Please supply an integer file ID";
-     }
-     FileObject readThis = findOpenFile(id);
-     if (readThis == null)
-      return "Bad file Id";
-     if (args.length == 2)
+       return "Please supply a file name";
+     FileObject readThis;
+     if (hasFile(args[1], here))
      {
-        return(readThis.read());
+      readThis = getFile(args[1], here);
+      return(readThis.read()); 
      }
-     else if (args.length == 3)
+     else
      {
-        int readStart = 0;
-        try {
-          readStart = Integer.parseInt(args[2]);
-        }
-        catch (NumberFormatException e){
-          return "Read start point must be an integer";
-        }
-        try {
-          return readThis.read(readStart);
-        }
-        catch (StringIndexOutOfBoundsException e) {
-          return "Read start point must be an integer less than the length of the data";
-        }
-     }
-     else if (args.length >= 4)
-     {
-        int readStart = 0;
-        int readend = 0;
-        try {
-          readStart = Integer.parseInt(args[2]);
-        }
-        catch (NumberFormatException e){
-          return "Read start point must be a positive integer";
-        }
-        if ( readStart < 0)
-          return "Read start point must be a positive integer";
-        try {
-          readend = Integer.parseInt(args[3]);
-        }
-        catch (NumberFormatException e){
-          return "Read stop point must be a positive integer";
-        }
-        try {
-          return readThis.read(readStart, readend);
-        }
-        catch (StringIndexOutOfBoundsException e) {
-          return "Invalid start or end: Must describe a subseqence of data";
-        }
+       return args[1] + " could not be found";
      }
 
-
-    return "It's not actually possible to get this message, but the compiler insists it it must be a thing";
    }
    
    public String writeFile(String[] args)//Alex Walters
    {
-    int id;
-    if (args.length < 3)
-      return "Please supply data (no spaces, sim limit) and a file id";
-    try {
-      id = Integer.parseInt(args[2]);
-    }
-    catch (NumberFormatException e){
-      return "Please supply an integer file ID";
-    }
-    FileObject readThis = findOpenFile(id);
-    if (readThis == null)
-      return "Bad file Id";
-    if (args.length == 3)
+    if (args.length < 2)
+      return "Please supply a file name";
+    FileObject writeThis;
+    if (hasFile(args[1], here))
     {
-       return(readThis.write(args[1]));
-    }
-    else if (args.length == 4)
-    {
-       int readStart = 0;
-       try {
-         readStart = Integer.parseInt(args[3]);
-       }
-       catch (NumberFormatException e){
-         return "Write start point must be an integer";
-       }
-       try {
-        return(readThis.write(args[1], readStart));
-       }
-       catch (StringIndexOutOfBoundsException e) {
-         return "Write start point must be a integer less than the length of the data";
-       }
-    }
-    else if (args.length >= 5)
-    {
-       int readStart = 0;
-       int readend = 0;
-       try {
-         readStart = Integer.parseInt(args[3]);
-       }
-       catch (NumberFormatException e){
-         return "Write start point must be a positive integer";
-       }
-       try {
-         readend = Integer.parseInt(args[4]);
-       }
-       catch (NumberFormatException e){
-         return "Write stop point must be a positive integer";
-       }
-       try {
-        return(readThis.write(args[1], readStart, readend));
-       }
-       catch (StringIndexOutOfBoundsException e) {
-         return "Invalid start or end: Must describe a subseqence of data";
-       }
-    }
+      writeThis = getFile(args[1], here);
+      System.out.println("Current contents: " + writeThis.read());
 
+      String in = FileSim.userInput.nextLine();
+      writeThis.write(in);
 
-    return "It's not actually possible to get this message, but the compiler insists it it must be a thing";
+      return "";
+    }
+    else
+    {
+      return args[1] + " could not be found";
+    }
     
    }
    
@@ -424,7 +282,6 @@ public class FileTree
    FileObject o = getFile(theseArgs[1], currentFolder());
    FolderObject f = getFolder(theseArgs[1], currentFolder());
    if(o!=null){
-     closeFileInternal(o.getIdentifier());
      currentFolder().remove(o);
      return "File Deleted";
    }
@@ -483,8 +340,9 @@ public class FileTree
  public String move(String[] theseArgs) {
   if (theseArgs.length < 3)
   return "Please supply name and target path";
-  String[] path = theseArgs[2].split("/");
+  String[] movepath = theseArgs[2].split("/");
   FileSystemObject object;
+
   if (hasFile(theseArgs[1], here))
   {
     object = getFile(theseArgs[1], here);
@@ -492,16 +350,39 @@ public class FileTree
   else if (hasFolder(theseArgs[1], here))
   {
     object = getFolder(theseArgs[1], here);
+
   }
   else 
     return "File or folder not found";
-  if (validatePath(path, here))
+  if (validatePath(movepath, here))
   {
-    FileSystemObject targetLoc = followPath(path, here);
-    if (hasFolder(theseArgs[2], targetLoc) || hasFile(theseArgs[2], targetLoc))
-      return "Target location already has an object with this name";
+    FileSystemObject targetLoc = followPath(movepath, here);
+    if (hasFolder(theseArgs[1], targetLoc) )
+    	return "Folder with the same name already exists in destination, aborting";
+    if (hasFile(theseArgs[1], targetLoc))
+    {
+
+    	
+		System.out.println("Press y or r to overwrite, anything to abort");
+		String whatdo = FileSim.userInput.nextLine();
+		if (whatdo.toLowerCase().charAt(0) == 'y' || whatdo.toLowerCase().charAt(0) == 'r')
+		{
+			FileObject tokill = getFile(theseArgs[1], targetLoc);
+			targetLoc.remove(tokill);
+			object.parent.remove(object);
+		    targetLoc.add(object);
+		    return theseArgs[1] + " moved, overwriting existing file.";
+			
+		}
+		else return "Move aborted";
+    		
+    	
+    }
     object.parent.remove(object);
     targetLoc.add(object);
+    return theseArgs[1] + " moved";
+
+    
   }
   return "Invalid path";
     
@@ -513,14 +394,52 @@ public class FileTree
     if (theseArgs.length < 3)
       return "Please supply name and new name path";
     
-    String[] split = theseArgs[2].split("\\."); 
-    if (split.length < 2)
-     return "Please supply a file name and extension.";
-    FileObject o = getFile(theseArgs[1], currentFolder());
-    if(o!=null)
+
+    FileSystemObject object;
+    String[] newName = theseArgs[2].split("\\.");
+    if (hasFile(theseArgs[1], currentFolder()))
     {
-      FileObject p = new FileObject(split[0], split[1]);
-      currentFolder().add(p);
+      object = getFile(theseArgs[1], currentFolder());
+      if (newName.length < 2)
+    	  return "Please give new name and type";
+    }
+    else if (hasFolder(theseArgs[1], currentFolder()))
+    {
+      object = getFolder(theseArgs[1], currentFolder());
+
+    }
+    else 
+        return "File or folder not found";
+    if(object!=null)
+    {
+      if (hasFolder(theseArgs[2], currentFolder()) )
+        return "Folder with the same name already exists here, aborting";
+      if (hasFile(theseArgs[2], currentFolder()))
+      {
+      	System.out.println("Object with the same name already here");
+      	
+  		System.out.println("Press y or r to overwrite, anything to abort");
+  		String whatdo = FileSim.userInput.nextLine();
+  		if (whatdo.toLowerCase().charAt(0) == 'y' || whatdo.toLowerCase().charAt(0) == 'r')
+  		{
+  			FileObject tokill = getFile(theseArgs[1], currentFolder());
+  			currentFolder().remove(tokill);
+  			FileSystemObject newObject = object.clone();
+  			newObject.setName(newName[0]);
+  			newObject.setType(newName[1]);
+  			currentFolder().add(newObject);
+  			
+  			
+  			
+
+  		    return theseArgs[1] + " copied, overwriting existing file.";
+  			
+  		}
+  		else return "Copy aborted";
+      		
+      	
+      }
+      currentFolder().add(object.clone());
       return "File Copied";
     }
     return "File not found to copy";
@@ -533,7 +452,7 @@ public class FileTree
     else
     {
       String[] pathS;
-      if (theseArgs[0].equals("cd\\"))
+      if (theseArgs[0].equals("cd.."))
         pathS = new String[] {".."};
       else if (theseArgs.length < 2)
         return "Please supply a new path";
@@ -577,6 +496,30 @@ public class FileTree
    return "Returned to root";
  }
 
+  
+  public String getInfo(String[] theseArgs)
+  {
+	  	FileSystemObject f;
+	    if (theseArgs.length < 2)
+	        return "Please supply a name";
+	    else if (hasFile(theseArgs[1], currentFolder() ))
+	    {
+	    	f = getFile(theseArgs[1], currentFolder());
+	    	
+	    }
+	    else if (hasFolder(theseArgs[1], currentFolder() ))
+	    {
+	    	f = getFolder(theseArgs[1], currentFolder());
+	    	
+	    }
+	    else
+	    {
+	    	return "File or folder not found";
+	    }
+	    	
+	    return f.getFullName() + "\t\t" + f.getSize() + f.getModified(); 
+	  
+  }
 
  public String viewFolder(String[] theseArgs) {
    String out = "";
@@ -587,20 +530,8 @@ public class FileTree
    {
      
      FileSystemObject candidate = search.next();
-     out += candidate.getFullName() + "\t";
-     if (candidate.getFullName().length() <=6)
-     {
-       out +="\t";
-     }
-     if (candidate.getFullName().length() <=13)
-     {
-      out +="\t";
-     }
-     if (candidate.getFullName().length() <=19)
-     {
-      out +="\t";
-     }
-     out += candidate.getSize() +"\t" + candidate.getIdentifier() + "\t" + candidate.getModified().toString() + "\n";
+     out += candidate.getFullName() + "\n";
+
      
    }
    return out;

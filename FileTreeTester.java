@@ -25,13 +25,7 @@ public class FileTreeTester{
 
     
     System.out.println(tree.makeFile(new String[] {"make", "test4.dum" }));
-    lineRep();
-    System.out.println(tree.openFile(new String[] {"open", "test4.dum" }));
-    lineRep();
-    System.out.println(tree.openFile(new String[] {"open", "testfile4.dum" }));
-    lineRep();
-    System.out.println(tree.writeFile(new String[] {"write", "Shine", "5" }));
-    System.out.println(tree.viewFolder(new String[] {}));
+
 
    
     

@@ -44,7 +44,8 @@ public abstract class FileSystemObject {
       newParent.add(this);
     }
 
-    
+    public abstract FileSystemObject clone();
+
 	
 
 	public abstract String getFullName();
